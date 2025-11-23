@@ -40,23 +40,23 @@
         <div class="grid md:grid-cols-4 gap-6">
             <div class="stat-card rounded-xl p-6 text-center card-hover">
                 <i class="fas fa-book text-4xl text-purple-600 mb-3"></i>
-                <div class="text-3xl font-bold text-gray-800 mb-1">10,000+</div>
+                <div class="text-3xl font-bold text-gray-800 mb-1">{{ number_format($totalBooks) }}</div>
                 <div class="text-gray-600 font-medium">Total Buku</div>
             </div>
             <div class="stat-card rounded-xl p-6 text-center card-hover">
                 <i class="fas fa-users text-4xl text-blue-600 mb-3"></i>
-                <div class="text-3xl font-bold text-gray-800 mb-1">5,000+</div>
+                <div class="text-3xl font-bold text-gray-800 mb-1">{{ number_format($totalUsers) }}</div>
                 <div class="text-gray-600 font-medium">Anggota Aktif</div>
             </div>
             <div class="stat-card rounded-xl p-6 text-center card-hover">
                 <i class="fas fa-bookmark text-4xl text-green-600 mb-3"></i>
-                <div class="text-3xl font-bold text-gray-800 mb-1">50+</div>
+                <div class="text-3xl font-bold text-gray-800 mb-1">{{ number_format($totalGenres) }}</div>
                 <div class="text-gray-600 font-medium">Kategori</div>
             </div>
             <div class="stat-card rounded-xl p-6 text-center card-hover">
                 <i class="fas fa-exchange-alt text-4xl text-red-600 mb-3"></i>
-                <div class="text-3xl font-bold text-gray-800 mb-1">1,000+</div>
-                <div class="text-gray-600 font-medium">Peminjaman/Bulan</div>
+                <div class="text-3xl font-bold text-gray-800 mb-1">{{ number_format($borrowingsThisMonth) }}</div>
+                <div class="text-gray-600 font-medium">Peminjaman Bulan Ini</div>
             </div>
         </div>
     </div>
