@@ -1,87 +1,112 @@
 @extends('layouts.app')
 
-@section('title', 'Active Borrowings - Library System')
+@section('title', 'Active Borrowings - Library')
 
 @section('content')
-<div class="bg-gray-50">
-    <!-- Hero Section -->
-    <div class="bg-black text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Active Borrowings</h1>
-            <p class="text-gray-400 text-lg">Books currently on loan</p>
+<!-- Hero Section -->
+<section class="hero-pattern text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-5xl font-bold mb-4">Active Borrowings</h1>
+            <p class="text-gray-300 text-lg">Books currently on loan</p>
         </div>
     </div>
+</section>
 
-    <!-- Search & Filter Section -->
-    <div class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <form method="GET" action="{{ route('borrowings.active') }}" class="space-y-4">
-                <!-- Search Bar -->
-                <div class="flex flex-col md:flex-row gap-4">
-                    <div class="flex-1">
-                        <input 
-                            type="text" 
-                            name="search" 
-                            value="{{ request('search') }}"
-                            placeholder="Search by book title or borrower name..." 
-                            class="w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-black focus:border-black transition"
-                        >
-                    </div>
-                    <button type="submit" class="px-8 py-3 bg-black text-white font-medium hover:bg-gray-800 transition">
-                        Search
-                    </button>
+<!-- Search & Filter Section -->
+<section class="py-8 bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <form method="GET" action="{{ route('borrowings.active') }}" class="space-y-4">
+            <!-- Search Bar -->
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        value="{{ request('search') }}"
+                        placeholder="Search by book title or borrower name..." 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+                    >
+                </div>
+                <button type="submit" class="px-8 py-3 bg-gray-900 text-white font-bold rounded-lg hover:bg-gray-800 transition shadow-md">
+                    <i class="fas fa-search mr-2"></i>Search
+                </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex flex-col md:flex-row gap-4 items-end">
+                <!-- Status Filter -->
+                <div class="flex-1">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-filter mr-1"></i>Status
+                    </label>
+                    <select name="status" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                        <option value="">All Status</option>
+                        <option value="borrowed" {{ request('status') == 'borrowed' ? 'selected' : '' }}>Borrowed</option>
+                        <option value="delayed" {{ request('status') == 'delayed' ? 'selected' : '' }}>Delayed</option>
+                    </select>
                 </div>
 
-                <!-- Filters -->
-                <div class="flex flex-col md:flex-row gap-4 items-end">
-                    <!-- Status Filter -->
-                    <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                        <select name="status" class="w-full px-4 py-2 border border-gray-300 focus:ring-2 focus:ring-black focus:border-black transition">
-                            <option value="">All Status</option>
-                            <option value="borrowed" {{ request('status') == 'borrowed' ? 'selected' : '' }}>Borrowed</option>
-                            <option value="delayed" {{ request('status') == 'delayed' ? 'selected' : '' }}>Delayed</option>
-                        </select>
-                    </div>
-
-                    @if(request()->hasAny(['search', 'status']))
-                        <a href="{{ route('borrowings.active') }}" class="px-6 py-2 border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition">
-                            Clear
-                        </a>
-                    @endif
-                </div>
-            </form>
-        </div>
+                @if(request()->hasAny(['search', 'status']))
+                    <a href="{{ route('borrowings.active') }}" class="px-6 py-3 border-2 border-gray-300 text-gray-700 font-bold rounded-lg hover:bg-gray-50 transition">
+                        <i class="fas fa-times mr-2"></i>Clear Filters
+                    </a>
+                @endif
+            </div>
+        </form>
     </div>
+</section>
 
-    <!-- Transactions List -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<!-- Transactions List -->
+<section class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         @if($transactions->isEmpty())
-            <div class="text-center py-16 bg-white border border-gray-200">
-                <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <h3 class="mt-4 text-lg font-medium text-gray-900">No active borrowings</h3>
-                <p class="mt-2 text-sm text-gray-500">There are currently no books on loan.</p>
+            <!-- Empty State -->
+            <div class="bg-white rounded-xl shadow-md p-12 text-center">
+                <div class="flex justify-center mb-6">
+                    <div class="w-24 h-24 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-book-reader text-purple-500 text-5xl"></i>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-3">No active borrowings</h2>
+                <p class="text-gray-600 mb-8">There are currently no books on loan.</p>
+                <a href="{{ route('books.index') }}" class="inline-block gradient-bg text-white px-8 py-3 rounded-lg hover:opacity-90 transition font-bold shadow-lg">
+                    <i class="fas fa-search mr-2"></i>Browse Books
+                </a>
             </div>
         @else
             <!-- Results Count -->
-            <div class="mb-6 text-sm text-gray-600">
-                Showing {{ $transactions->firstItem() }}-{{ $transactions->lastItem() }} of {{ $transactions->total() }} transactions
+            <div class="mb-6 flex items-center justify-between">
+                <p class="text-gray-600 font-medium">
+                    <i class="fas fa-list mr-2 text-purple-500"></i>
+                    Showing {{ $transactions->firstItem() }}-{{ $transactions->lastItem() }} of {{ $transactions->total() }} transactions
+                </p>
             </div>
 
             <!-- Transactions Table -->
-            <div class="bg-white border border-gray-200 overflow-hidden">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Book</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Borrower</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Borrowed Date</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Days Left</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    <i class="fas fa-book mr-2 text-purple-500"></i>Book
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    <i class="fas fa-user mr-2 text-blue-500"></i>Borrower
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    <i class="fas fa-calendar-plus mr-2 text-green-500"></i>Borrowed Date
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    <i class="fas fa-calendar-check mr-2 text-orange-500"></i>Due Date
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    <i class="fas fa-hourglass-half mr-2 text-yellow-500"></i>Days Left
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    <i class="fas fa-info-circle mr-2 text-indigo-500"></i>Status
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -95,58 +120,85 @@
                                     <!-- Book -->
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-16 w-12 bg-gray-100 border border-gray-200">
+                                            <div class="flex-shrink-0 h-20 w-14 bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200 shadow-sm">
                                                 @if($transaction->book->cover_image)
                                                     <img src="{{ Storage::url($transaction->book->cover_image) }}" alt="{{ $transaction->book->title }}" class="h-full w-full object-cover">
+                                                @else
+                                                    <div class="h-full w-full flex items-center justify-center">
+                                                        <i class="fas fa-book text-gray-300 text-2xl"></i>
+                                                    </div>
                                                 @endif
                                             </div>
                                             <div class="ml-4">
-                                                <a href="{{ route('books.show', $transaction->book) }}" class="text-sm font-medium text-gray-900 hover:text-gray-600 transition">
+                                                <a href="{{ route('books.show', $transaction->book) }}" class="text-sm font-bold text-gray-900 hover:text-purple-600 transition">
                                                     {{ Str::limit($transaction->book->title, 40) }}
                                                 </a>
-                                                <div class="text-sm text-gray-500">by {{ $transaction->book->author->name }}</div>
+                                                <div class="text-sm text-gray-600">by {{ $transaction->book->author->name }}</div>
                                             </div>
                                         </div>
                                     </td>
 
                                     <!-- Borrower -->
                                     <td class="px-6 py-4">
-                                        <div class="text-sm font-medium text-gray-900">{{ $transaction->user->name }}</div>
-                                        <div class="text-sm text-gray-500">{{ $transaction->user->email }}</div>
+                                        <div class="text-sm font-bold text-gray-900">{{ $transaction->user->name }}</div>
+                                        <div class="text-sm text-gray-600">{{ $transaction->user->email }}</div>
                                     </td>
 
                                     <!-- Borrowed Date -->
-                                    <td class="px-6 py-4 text-sm text-gray-900">
-                                        {{ $transaction->borrowed_date->format('M d, Y') }}
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-semibold text-gray-900">
+                                            {{ $transaction->borrowed_date->format('M d, Y') }}
+                                        </div>
+                                        <div class="text-xs text-gray-500">
+                                            {{ $transaction->borrowed_date->diffForHumans() }}
+                                        </div>
                                     </td>
 
                                     <!-- Due Date -->
-                                    <td class="px-6 py-4 text-sm text-gray-900">
-                                        {{ $dueDate->format('M d, Y') }}
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-semibold text-gray-900">
+                                            {{ $dueDate->format('M d, Y') }}
+                                        </div>
+                                        <div class="text-xs text-gray-500">
+                                            {{ $dueDate->diffForHumans() }}
+                                        </div>
                                     </td>
 
                                     <!-- Days Left -->
                                     <td class="px-6 py-4">
                                         @if($isOverdue)
-                                            <span class="text-sm font-medium text-red-600">
-                                                {{ abs($daysLeft) }} days overdue
-                                            </span>
+                                            <div class="inline-flex items-center px-3 py-2 rounded-lg bg-red-100 border border-red-200">
+                                                <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
+                                                <span class="text-sm font-bold text-red-700">
+                                                    {{ abs($daysLeft) }} days overdue
+                                                </span>
+                                            </div>
+                                        @elseif($daysLeft <= 3)
+                                            <div class="inline-flex items-center px-3 py-2 rounded-lg bg-yellow-100 border border-yellow-200">
+                                                <i class="fas fa-clock text-yellow-600 mr-2"></i>
+                                                <span class="text-sm font-bold text-yellow-700">
+                                                    {{ $daysLeft }} days left
+                                                </span>
+                                            </div>
                                         @else
-                                            <span class="text-sm text-gray-900">
-                                                {{ $daysLeft }} days left
-                                            </span>
+                                            <div class="inline-flex items-center px-3 py-2 rounded-lg bg-green-100 border border-green-200">
+                                                <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                                <span class="text-sm font-bold text-green-700">
+                                                    {{ $daysLeft }} days left
+                                                </span>
+                                            </div>
                                         @endif
                                     </td>
 
                                     <!-- Status -->
                                     <td class="px-6 py-4">
                                         @if($transaction->status->value === 'borrowed')
-                                            <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">
-                                                Borrowed
+                                            <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-blue-500 text-white shadow-sm">
+                                                <i class="fas fa-book-reader mr-2"></i>Borrowed
                                             </span>
                                         @elseif($transaction->status->value === 'delayed')
-                                            <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                Delayed
+                                            <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-red-500 text-white shadow-sm">
+                                                <i class="fas fa-exclamation-circle mr-2"></i>Delayed
                                             </span>
                                         @endif
                                     </td>
@@ -163,5 +215,5 @@
             </div>
         @endif
     </div>
-</div>
+</section>
 @endsection

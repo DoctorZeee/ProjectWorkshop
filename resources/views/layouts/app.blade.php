@@ -1,110 +1,131 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Library System')</title>
-    
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <title>@yield('title', 'Library - Sistem Perpustakaan Digital')</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .hero-pattern {
+            background-color: #1a202c;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234a5568' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+    @stack('styles')
 </head>
-<body class="bg-white text-gray-900 antialiased">
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-black text-white border-b border-gray-800">
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-gray-900 shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <a href="{{ route('books.index') }}" class="flex items-center space-x-2">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    <span class="text-xl font-bold">Library</span>
-                </a>
-
-                <!-- Navigation -->
-                <nav class="hidden md:flex items-center space-x-8">
-                    <a href="{{ route('home.index') }}" class="text-sm font-medium hover:text-gray-300 transition {{ request()->routeIs('home.*') ? 'text-white' : 'text-gray-400' }}">
-                        Home
+                <div class="flex items-center">
+                    <i class="fas fa-book-open text-purple-400 text-2xl mr-3"></i>
+                    <span class="text-white text-xl font-bold">Library</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="text-white hover:text-purple-400 transition font-medium {{ request()->is('/') ? 'text-purple-400' : 'text-gray-300' }}">Home</a>
+                    <a href="/books" class="hover:text-purple-400 transition {{ request()->is('books*') ? 'text-purple-400' : 'text-gray-300' }}">Catalog</a>
+                    <a href="/borrowings/active" class="hover:text-purple-400 transition {{ request()->is('borrowings/active*') ? 'text-purple-400' : 'text-gray-300' }}">Active Borrowings</a>
+                    <a href="/borrowings/history" class="hover:text-purple-400 transition {{ request()->is('borrowings/history*') ? 'text-purple-400' : 'text-gray-300' }}">History</a>
+                    <a href="#" class="text-gray-300 hover:text-purple-400 transition">About</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-300 hover:text-white transition">
+                        <i class="fas fa-search text-lg"></i>
+                    </button>
+                    <a href="{{ route('filament.admin.auth.login') }}"
+                        class="gradient-bg text-white px-4 py-2 rounded-lg hover:opacity-90 transition font-medium">
+                        Login Admin
                     </a>
-                    <a href="{{ route('books.index') }}" class="text-sm font-medium hover:text-gray-300 transition {{ request()->routeIs('books.*') ? 'text-white' : 'text-gray-400' }}">
-                        Catalog
-                    </a>
-                    <a href="{{ route('borrowings.active') }}" class="text-sm font-medium hover:text-gray-300 transition {{ request()->routeIs('borrowings.active') ? 'text-white' : 'text-gray-400' }}">
-                        Active Borrowings
-                    </a>
-                    <a href="{{ route('borrowings.history') }}" class="text-sm font-medium hover:text-gray-300 transition {{ request()->routeIs('borrowings.history') ? 'text-white' : 'text-gray-400' }}">
-                        History
-                    </a>
-                    <a href="#" class="text-sm font-medium text-gray-400 hover:text-gray-300 transition">
-                        About
-                    </a>
-                </nav>
-
-                <!-- Mobile menu button -->
-                <button type="button" class="md:hidden p-2" onclick="toggleMobileMenu()">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Mobile menu -->
-            <div id="mobile-menu" class="hidden md:hidden pb-4">
-                <a href="{{ route('books.index') }}" class="block py-2 text-sm font-medium {{ request()->routeIs('books.*') ? 'text-white' : 'text-gray-400' }}">
-                    Catalog
-                </a>
-                <a href="{{ route('borrowings.active') }}" class="block py-2 text-sm font-medium {{ request()->routeIs('borrowings.active') ? 'text-white' : 'text-gray-400' }}">
-                    Active Borrowings
-                </a>
-                <a href="{{ route('borrowings.history') }}" class="block py-2 text-sm font-medium {{ request()->routeIs('borrowings.history') ? 'text-white' : 'text-gray-400' }}">
-                    History
-                </a>
-                <a href="#" class="block py-2 text-sm font-medium text-gray-400">
-                    About
-                </a>
+                </div>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <!-- Main Content -->
-    <main class="min-h-screen">
-        @yield('content')
-    </main>
+    <!-- Content Section -->
+    @yield('content')
 
     <!-- Footer -->
-    <footer class="bg-black text-gray-400 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer class="bg-gray-900 text-white py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
                 <div>
-                    <h3 class="text-white font-bold text-lg mb-4">Library System</h3>
-                    <p class="text-sm">A modern library management system with a sleek and simple interface.</p>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-book-open text-purple-400 text-2xl mr-3"></i>
+                        <span class="text-xl font-bold">Library</span>
+                    </div>
+                    <p class="text-gray-400">
+                        Sistem perpustakaan digital modern untuk kemudahan akses buku dan pembelajaran.
+                    </p>
                 </div>
                 <div>
-                    <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="{{ route('books.index') }}" class="hover:text-white transition">Catalog</a></li>
-                        <li><a href="{{ route('borrowings.active') }}" class="hover:text-white transition">Active Borrowings</a></li>
-                        <li><a href="{{ route('borrowings.history') }}" class="hover:text-white transition">History</a></li>
-                        <li><a href="#" class="hover:text-white transition">About</a></li>
+                    <h3 class="font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/" class="hover:text-purple-400 transition">Home</a></li>
+                        <li><a href="/books" class="hover:text-purple-400 transition">Catalog</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">About</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">Contact</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-white font-bold text-lg mb-4">Contact</h3>
-                    <p class="text-sm">Email: library@example.com</p>
-                    <p class="text-sm">Phone: (123) 456-7890</p>
+                    <h3 class="font-semibold mb-4">Services</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-purple-400 transition">Book Borrowing</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">Digital Library</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">Reading Room</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">Membership</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4">Contact Us</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>Jl. Perpustakaan No. 123</li>
+                        <li><i class="fas fa-phone mr-2"></i>+62 123 4567 890</li>
+                        <li><i class="fas fa-envelope mr-2"></i>info@library.com</li>
+                    </ul>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-purple-400 transition">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-purple-400 transition">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-purple-400 transition">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="mt-8 pt-8 border-t border-gray-800 text-center text-sm">
-                <p>&copy; {{ date('Y') }} Library System. All rights reserved.</p>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Library System. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script>
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
-    </script>
+    @stack('scripts')
 </body>
 </html>
